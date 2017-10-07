@@ -3,13 +3,22 @@
 VulnDB Data Mirror
 ================
 
-A simple Java command-line utility to mirror the entire contents of the VulnDB service.
+A simple Java command-line utility to mirror the entire contents of the [VulnDB] service from [Risk Based Security].
 
 The intended purpose of vulndb-data-mirror is to be able to replicate the VulnDB vulnerabiity 
 data inside a company firewall so that local (faster) access to data can be achieved and reused 
 by the [OWASP Dependency-Check] and [OWASP Dependency-Track] ecosystem.
 
+The VulnDB service utilizes a paginated REST API that must be walked for each type of feed. 
+Due the large data-set the service provides, it may take an hour or more to mirror the contents. 
+Because of the performance impact due to this design, a separate mirroring utility is favorable
+instead of introducing VulnDB mirroring functionality in Dependency-Check or Dependency-Track.
+VulnDB Data Mirror serves this purpose.
+
 For best results, use vulndb-data-mirror with cron or another scheduler to keep the mirrored data fresh.
+
+A subscription to VulnDB is required for use. Contact [VulnDB] for evaluation and 
+subscription information.
 
 Usage
 ----------------
@@ -57,3 +66,5 @@ Permission to modify and redistribute is granted under the terms of the Apache 2
   [OWASP Dependency-Track]: https://www.owasp.org/index.php/OWASP_Dependency_Track_Project
   [Apache 2.0]: https://github.com/stevespringett/vulndb-data-mirror/blob/master/LICENSE
   [pre-compiled binaries]: https://github.com/stevespringett/vulndb-data-mirror/releases
+  [VulnDB]: https://vulndb.cyberriskanalytics.com/
+  [Risk Based Security]: https://www.riskbasedsecurity.com/ 
