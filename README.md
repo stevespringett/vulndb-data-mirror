@@ -10,9 +10,9 @@ data inside a company firewall so that local (faster) access to data can be achi
 by the [OWASP Dependency-Check] and [OWASP Dependency-Track] ecosystem.
 
 The VulnDB service utilizes a paginated REST API that must be walked for each type of feed. 
-Due the large data-set the service provides, it may take an hour or more to mirror the contents. 
+Due to the large data-set the service provides, it may take an hour or more to mirror the contents. 
 Because of the performance impact due to this design, a separate mirroring utility is favorable
-instead of introducing VulnDB mirroring functionality in Dependency-Check or Dependency-Track.
+instead of native VulnDB mirroring support in Dependency-Check or Dependency-Track.
 VulnDB Data Mirror serves this purpose.
 
 For best results, use vulndb-data-mirror with cron or another scheduler to keep the mirrored data fresh.
