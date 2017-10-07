@@ -35,6 +35,11 @@
         <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
         <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
         <maven.github.release.plugin.version>1.2.0</maven.github.release.plugin.version>
+        <!-- Library Versions -->
+        <lib.commons.lang3.version>3.6</lib.commons.lang3.version>
+        <lib.slf4j.version>1.7.25</lib.slf4j.version>
+        <lib.unirest.version>1.4.9</lib.unirest.version>
+        <lib.signpost-core.version>1.2.1.2</lib.signpost-core.version>
     </properties>
 
     <developers>
@@ -75,6 +80,33 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
+
+    <dependencies>
+        <!-- Apache Commons -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${lib.commons.lang3.version}</version>
+        </dependency>
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${lib.slf4j.version}</version>
+        </dependency>
+        <!-- Unirest -->
+        <dependency>
+            <groupId>com.mashape.unirest</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>${lib.unirest.version}</version>
+        </dependency>
+        <!-- OAuth 1.0a Signing Request -->
+        <dependency>
+            <groupId>oauth.signpost</groupId>
+            <artifactId>signpost-core</artifactId>
+            <version>${lib.signpost-core.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <finalName>${project.artifactId}</finalName>
