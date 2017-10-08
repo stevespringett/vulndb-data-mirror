@@ -9,6 +9,10 @@ The intended purpose of vulndb-data-mirror is to be able to replicate the VulnDB
 data inside a company firewall so that local (faster) access to data can be achieved and reused 
 by the [OWASP Dependency-Check] and [OWASP Dependency-Track] ecosystem.
 
+In addition to mirroring functionality, VulnDB Data Mirror includes a parser that can automatically
+convert JSON data to model objects (defined as POJO's). This greatly eases the ramp-up time needed
+to consume the VulnDB data in a programmatic way.
+
 The VulnDB service utilizes a paginated REST API that must be walked for each type of feed. 
 Due to the large data-set the service provides, it may take an hour or more to mirror the contents. 
 Because of the performance impact due to this design, a separate mirroring utility is favorable
