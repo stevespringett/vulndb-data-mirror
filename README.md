@@ -21,8 +21,13 @@ VulnDB Data Mirror serves this purpose.
 
 For best results, use vulndb-data-mirror with cron or another scheduler to keep the mirrored data fresh.
 
-A subscription to VulnDB is required for use. Contact [VulnDB] for evaluation and 
-subscription information.
+A subscription to VulnDB is required for use. Contact [VulnDB] for evaluation and subscription information. 
+VulnDB Data Mirror or it's creator are not affiliated with VulnDB or Risk Based Security. This is a 
+community-driven project that acknowledges the value of third-party vulnerability intelligence to 
+enhance or supplement publicly disclosed information.
+
+By using VulnDB Data Mirror, you accept that it will be used in a manner that conforms to the VulnDB terms of use.
+
 
 Usage
 ----------------
