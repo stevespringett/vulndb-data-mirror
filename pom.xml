@@ -36,6 +36,7 @@
         <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
         <maven.github.release.plugin.version>1.2.0</maven.github.release.plugin.version>
         <!-- Library Versions -->
+        <lib.commons.io.version>2.5</lib.commons.io.version>
         <lib.commons.lang3.version>3.6</lib.commons.lang3.version>
         <lib.slf4j.version>1.7.25</lib.slf4j.version>
         <lib.unirest.version>1.4.9</lib.unirest.version>
@@ -83,6 +84,11 @@
 
     <dependencies>
         <!-- Apache Commons -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${lib.commons.io.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>

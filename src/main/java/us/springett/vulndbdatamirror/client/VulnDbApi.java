@@ -61,7 +61,7 @@ public class VulnDbApi {
      * @param size the number of items to fetch
      * @param page the page number of the fetched items
      * @return a Results object
-     * @since 3.0.0
+     * @since 1.0.0
      */
     public Results getVendors(int size, int page) {
         return getResults(VENDORS_URL, Vendor.class, size, page);
@@ -73,7 +73,7 @@ public class VulnDbApi {
      * @param size the number of items to fetch
      * @param page the page number of the fetched items
      * @return a Results object
-     * @since 3.0.0
+     * @since 1.0.0
      */
     public Results getProducts(int size, int page) {
         return getResults(PRODUCTS_URL, Product.class, size, page);
@@ -86,7 +86,7 @@ public class VulnDbApi {
      * @param size      the number of items to fetch
      * @param page      the page number of the fetched items
      * @return a Results object
-     * @since 3.0.0
+     * @since 1.0.0
      */
     public Results getVersions(int productId, int size, int page) {
         return getResults(VERSIONS_URL + productId, Version.class, size, page);
@@ -98,7 +98,7 @@ public class VulnDbApi {
      * @param size the number of items to fetch
      * @param page the page number of the fetched items
      * @return a Results object
-     * @since 3.0.0
+     * @since 1.0.0
      */
     public Results getVulnerabilities(int size, int page) {
         return getResults(VULNERABILITIES_URL, Vulnerability.class, size, page);
@@ -112,7 +112,7 @@ public class VulnDbApi {
      * @param size  the number of items to fetch
      * @param page  the page number of the fetched items
      * @return a parsed Results object
-     * @since 3.0.0
+     * @since 1.0.0
      */
     private Results getResults(String url, Class clazz, int size, int page) {
         url = (url.contains("?")) ? url + "&" : url + "?";
@@ -122,7 +122,8 @@ public class VulnDbApi {
                 final VulnDbParser parser = new VulnDbParser();
                 return parser.parse(response.getBody(), clazz);
             } else {
-                LOGGER.error("Response was not successful: " + response.getStatus() + " - " + response.getStatusText());
+                LOGGER.error("Response was not successful: " + response.getStatus() + " - " + response.getStatusText() + " - " + response.getBody());
+                System.err.println("\n" + response.getStatus() + " - " + response.getStatusText() + " - " + response.getBody());
             }
         }
         return new Results();
@@ -133,7 +134,7 @@ public class VulnDbApi {
      *
      * @param url the URL being requested
      * @return an HttpResponse
-     * @since 3.0.0
+     * @since 1.0.0
      */
     private HttpResponse<JsonNode> makeRequest(String url) {
         try {
