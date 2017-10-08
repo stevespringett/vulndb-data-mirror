@@ -36,7 +36,7 @@ mvn clean package
 ### Running
 
 ```sh
-java -jar vulndb-data-mirror.jar <mirror-directory>
+java -jar vulndb-data-mirror.jar <consumer-key> <consumer-secret> <mirror-directory>
 ```
 
 Downloading
