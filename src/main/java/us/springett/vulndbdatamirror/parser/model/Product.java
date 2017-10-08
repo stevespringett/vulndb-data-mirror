@@ -25,7 +25,7 @@ import java.util.List;
  * @author Steve Springett
  * @since 1.0.0
  */
-public class Product {
+public class Product implements ApiObject {
 
     private int id;
     private String name;

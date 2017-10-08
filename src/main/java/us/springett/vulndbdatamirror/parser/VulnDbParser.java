@@ -21,16 +21,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import us.springett.vulndbdatamirror.parser.model.Author;
-import us.springett.vulndbdatamirror.parser.model.CPE;
-import us.springett.vulndbdatamirror.parser.model.Classification;
-import us.springett.vulndbdatamirror.parser.model.ExternalReference;
-import us.springett.vulndbdatamirror.parser.model.ExternalText;
-import us.springett.vulndbdatamirror.parser.model.Product;
-import us.springett.vulndbdatamirror.parser.model.Results;
-import us.springett.vulndbdatamirror.parser.model.Vendor;
-import us.springett.vulndbdatamirror.parser.model.Version;
-import us.springett.vulndbdatamirror.parser.model.Vulnerability;
+import us.springett.vulndbdatamirror.parser.model.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +36,7 @@ public class VulnDbParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VulnDbParser.class);
 
-    public Results parse(JsonNode jsonNode, Class resultType) {
+    public Results parse(JsonNode jsonNode, Class<? extends ApiObject> apiObject) {
         LOGGER.debug("Parsing JSON node");
 
         final Results results = new Results();
@@ -54,16 +46,20 @@ public class VulnDbParser {
         results.setRawResults(jsonNode.toString());
         final JSONArray rso = root.getJSONArray("results");
 
-        if (Product.class == resultType) {
+        if (Product.class == apiObject) {
             results.setResults(parseProducts(rso));
-        } else if (Vendor.class == resultType) {
+        } else if (Vendor.class == apiObject) {
             results.setResults(parseVendors(rso));
-        } else if (Version.class == resultType) {
+        } else if (Version.class == apiObject) {
             results.setResults(parseVersions(rso));
-        } else if (Vulnerability.class == resultType) {
+        } else if (Vulnerability.class == apiObject) {
             results.setResults(parseVulnerabilities(rso));
         }
         return results;
+    }
+
+    public Results parse(String jsonData, Class<? extends ApiObject> apiObject) {
+        return parse(new JsonNode(jsonData), apiObject);
     }
 
     private List<CPE> parseCpes(JSONArray rso) {
@@ -139,7 +135,7 @@ public class VulnDbParser {
             for (int i = 0; i < rso.length(); i++) {
                 final JSONObject object = rso.getJSONObject(i);
                 final Vulnerability vulnerability = new Vulnerability();
-                vulnerability.setVulnDbId(object.getInt("vulndb_id"));
+                vulnerability.setId(object.getInt("vulndb_id"));
                 vulnerability.setTitle(StringUtils.trimToNull(object.optString("title", null)));
                 vulnerability.setDisclosureDate(StringUtils.trimToNull(object.optString("disclosure_date", null)));
                 vulnerability.setDiscoveryDate(StringUtils.trimToNull(object.optString("discovery_date", null)));
