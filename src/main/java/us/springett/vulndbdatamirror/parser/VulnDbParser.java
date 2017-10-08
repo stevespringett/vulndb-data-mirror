@@ -21,8 +21,17 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import us.springett.vulndbdatamirror.parser.model.*;
-
+import us.springett.vulndbdatamirror.parser.model.ApiObject;
+import us.springett.vulndbdatamirror.parser.model.Author;
+import us.springett.vulndbdatamirror.parser.model.CPE;
+import us.springett.vulndbdatamirror.parser.model.Classification;
+import us.springett.vulndbdatamirror.parser.model.ExternalReference;
+import us.springett.vulndbdatamirror.parser.model.ExternalText;
+import us.springett.vulndbdatamirror.parser.model.Product;
+import us.springett.vulndbdatamirror.parser.model.Results;
+import us.springett.vulndbdatamirror.parser.model.Vendor;
+import us.springett.vulndbdatamirror.parser.model.Version;
+import us.springett.vulndbdatamirror.parser.model.Vulnerability;
 import java.util.ArrayList;
 import java.util.List;
 
