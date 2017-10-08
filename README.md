@@ -26,7 +26,7 @@ VulnDB Data Mirror or it's creator are not affiliated with VulnDB or Risk Based 
 community-driven project that acknowledges the value of third-party vulnerability intelligence to 
 enhance or supplement publicly disclosed information.
 
-By using VulnDB Data Mirror, you accept that it will be used in a manner that conforms to the VulnDB terms of use.
+By using VulnDB Data Mirror, you accept that it will be used in a manner that conforms to the VulnDB terms of service.
 
 
 Usage
