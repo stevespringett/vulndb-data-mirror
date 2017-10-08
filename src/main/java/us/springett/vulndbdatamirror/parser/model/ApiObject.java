@@ -15,6 +15,13 @@
  */
 package us.springett.vulndbdatamirror.parser.model;
 
+/**
+ * This interface defines the top-level (and queryable) objects that
+ * VulnDB supports.
+ *
+ * @author Steve Springett
+ * @since 1.0.0
+ */
 public interface ApiObject {
 
     int getId();
