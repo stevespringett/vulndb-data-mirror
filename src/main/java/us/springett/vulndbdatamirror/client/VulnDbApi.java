@@ -50,6 +50,12 @@ public class VulnDbApi {
     private String consumerKey;
     private String consumerSecret;
 
+    public enum Type {
+        VENDORS,
+        PRODUCTS,
+        VULNERABILITIES
+    }
+
     public VulnDbApi(String consumerKey, String consumerSecret) {
         this.consumerKey = consumerKey;
         this.consumerSecret = consumerSecret;
