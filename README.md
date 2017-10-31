@@ -44,6 +44,24 @@ mvn clean package
 java -jar vulndb-data-mirror.jar <consumer-key> <consumer-secret> <mirror-directory>
 ```
 
+When running, the console output will resemble:
+
+```
+Mirroring Vendors feed...
+  Processing 18344 of 18344 results
+Mirroring Products feed...
+  Processing 136853 of 136853 results
+Mirroring Vulnerabilities feed...
+  Processing 142500 of 166721 results
+```
+
+### VulnDB API License
+
+The process of mirroring the contents of VulnDB takes several thousand requests. You may estimate the number of 
+requests required by dividing 100 by the total number of results in each of the three feeds. After mirroring is 
+complete, make a backup of the contents so that a full mirror does not have to take place again. VulnDB may be 
+licensed based on the number of API calls made to the service. Check with the vendor for details.
+
 Downloading
 ----------------
 
