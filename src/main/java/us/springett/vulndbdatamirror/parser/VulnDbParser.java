@@ -32,6 +32,11 @@ import us.springett.vulndbdatamirror.parser.model.Results;
 import us.springett.vulndbdatamirror.parser.model.Vendor;
 import us.springett.vulndbdatamirror.parser.model.Version;
 import us.springett.vulndbdatamirror.parser.model.Vulnerability;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +73,11 @@ public class VulnDbParser {
     }
 
     public Results parse(String jsonData, Class<? extends ApiObject> apiObject) {
+        return parse(new JsonNode(jsonData), apiObject);
+    }
+
+    public Results parse(File file, Class<? extends ApiObject> apiObject) throws IOException {
+        String jsonData = new String(Files.readAllBytes(Paths.get(file.toURI())));
         return parse(new JsonNode(jsonData), apiObject);
     }
 
