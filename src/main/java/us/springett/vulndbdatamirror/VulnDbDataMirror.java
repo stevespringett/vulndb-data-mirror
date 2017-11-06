@@ -15,6 +15,13 @@
  */
 package us.springett.vulndbdatamirror;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 import us.springett.vulndbdatamirror.client.VulnDbApi;
 import us.springett.vulndbdatamirror.parser.model.Results;
@@ -38,27 +45,57 @@ public class VulnDbDataMirror {
 
     private static final String UPDATE_PROP = "update.properties";
 
-    private Properties properties = new Properties();
+    private final Properties properties = new Properties();
     private File propertyFile;
-    private String consumerKey;
-    private String consumerSecret;
-    private File outputDir;
+    private final String consumerKey;
+    private final String consumerSecret;
+    private final File outputDir;
     private boolean downloadFailed = false;
 
     public static void main (String[] args) throws Exception {
-        // Ensure at least three argument was specified
-        if (args.length != 3) {
-            System.out.println("Usage: java VulnDbDataMirror consumerKey consumerSecret outputDir");
-            return;
-        }
-        VulnDbDataMirror mirror = new VulnDbDataMirror(args[0], args[1], args[2]);
-        mirror.mirror();
-        if (mirror.downloadFailed) {
-          System.exit(1);
+        final CommandLineParser parser = new DefaultParser();
+        final Options options = new Options();
+
+        options.addOption( "vend", "mirror-vendors", false, "Mirror the vendors data feed" );
+        options.addOption( "prod", "mirror-products", false, "Mirror the products data feed" );
+        options.addOption( "vuln", "mirror-vulnerabilities", false, "Mirror the vulnerabilities data feed" );
+
+        options.addOption(Option.builder().longOpt("consumer-key").desc("The Consumer Key provided by VulnDB")
+                .hasArg().required().argName("key").build()
+        );
+        options.addOption(Option.builder().longOpt("consumer-secret").desc("The Consumer Secret provided by VulnDB")
+                .hasArg().required().argName("secret").build()
+        );
+        options.addOption(Option.builder().longOpt("dir").desc("The target directory to store contents")
+                .hasArg().required().argName("dir").build()
+        );
+
+        try {
+            final CommandLine line = parser.parse(options, args);
+            final VulnDbDataMirror mirror = new VulnDbDataMirror(args[0], args[1], args[2]);
+
+            if (line.hasOption("mirror-vendors")) {
+                mirror.mirrorVendors();
+            }
+            if (line.hasOption("mirror-products")) {
+                mirror.mirrorProducts();
+            }
+            if (line.hasOption("mirror-vulnerabilities")) {
+                mirror.mirrorVulnerabilities();
+            }
+            if (!(line.hasOption("mirror-vendors") && line.hasOption("mirror-products") && line.hasOption("mirror-vulnerabilities"))) {
+                System.out.println("A feed to mirror was not specified. Defaulting to mirror all feeds.");
+                mirror.mirrorVendors();
+                mirror.mirrorProducts();
+                mirror.mirrorVulnerabilities();
+            }
+        } catch (ParseException e) {
+            final HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("vulndb-data-mirror", options);
         }
     }
 
-    public VulnDbDataMirror(String consumerKey, String consumerSecret, String outputDirPath) {
+    private VulnDbDataMirror(String consumerKey, String consumerSecret, String outputDirPath) {
         this.consumerKey = consumerKey;
         this.consumerSecret = consumerSecret;
         this.outputDir = new File(outputDirPath);
@@ -82,9 +119,8 @@ public class VulnDbDataMirror {
         }
     }
 
-    public void mirror() throws Exception {
+    private void mirrorVendors() throws Exception {
         final VulnDbApi api = new VulnDbApi(this.consumerKey, this.consumerSecret);
-
         System.out.print("\nMirroring Vendors feed...\n");
         int page = lastSuccessfulPage("vendors");
         boolean more = true;
@@ -93,23 +129,38 @@ public class VulnDbDataMirror {
             more = processResults(this.outputDir, VulnDbApi.Type.VENDORS, results);
             page++;
         }
+        if (downloadFailed) {
+            System.exit(1);
+        }
+    }
 
+    private void mirrorProducts() throws Exception {
+        final VulnDbApi api = new VulnDbApi(this.consumerKey, this.consumerSecret);
         System.out.print("\nMirroring Products feed...\n");
-        page = lastSuccessfulPage("products");
-        more = true;
+        int page = lastSuccessfulPage("products");
+        boolean more = true;
         while (more) {
             final Results results = api.getProducts(100, page);
             more = processResults(this.outputDir, VulnDbApi.Type.PRODUCTS, results);
             page++;
         }
+        if (downloadFailed) {
+            System.exit(1);
+        }
+    }
 
+    private void mirrorVulnerabilities() throws Exception {
+        final VulnDbApi api = new VulnDbApi(this.consumerKey, this.consumerSecret);
         System.out.print("\nMirroring Vulnerabilities feed...\n");
-        page = lastSuccessfulPage("vulnerabilities");
-        more = true;
+        int page = lastSuccessfulPage("vulnerabilities");
+        boolean more = true;
         while (more) {
             final Results results = api.getVulnerabilities(100, page);
             more = processResults(this.outputDir, VulnDbApi.Type.VULNERABILITIES, results);
             page++;
+        }
+        if (downloadFailed) {
+            System.exit(1);
         }
     }
 

@@ -29,19 +29,45 @@ enhance or supplement publicly disclosed information.
 By using VulnDB Data Mirror, you accept that it will be used in a manner that conforms to the VulnDB terms of service.
 
 
+Distribution
+----------------
+
+VulnDB Data Mirror is distributed two different ways. 
+
+
+[Pre-compiled binaries] WILL be available (once 1.0.0 is released) from GitHub. This distribution
+is intended to be extracted and executed in order to run and maintain a working VulnDB mirror. This is the
+recommended method for most users.
+
+
+The standalone library is available in the Maven Central 
+Repository. This distribution is useful for programmatic access to the mirroring or parsing functionality.
+
+
+```xml
+<dependency>
+    <groupId>us.springett</groupId>
+    <artifactId>vulndb-data-mirror</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
+```
+
+
 Usage
 ----------------
 
-### Building
+### Windows
+
 
 ```sh
-mvn clean package
+vulndb-data-mirror.bat --consumer-key mykey --consumer-secret mysecret --dir "c:\path\to\mirror"
 ```
 
-### Running
+
+### Unix/Linux
 
 ```sh
-java -jar vulndb-data-mirror.jar <consumer-key> <consumer-secret> <mirror-directory>
+vulndb-data-mirror.sh --consumer-key mykey --consumer-secret mysecret --dir "/path/to/mirror"
 ```
 
 When running, the console output will resemble:
@@ -55,6 +81,19 @@ Mirroring Vulnerabilities feed...
   Processing 142500 of 166721 results
 ```
 
+### Getting Help
+
+Execute vulndb-data-mirror.bar or vulndb-data-mirror.sh (without options)
+```
+usage: vulndb-data-mirror
+    --consumer-key <key>          The Consumer Key provided by VulnDB
+    --consumer-secret <secret>    The Consumer Secret provided by VulnDB
+    --dir <dir>                   The target directory to store contents
+ -prod,--mirror-products          Mirror the products data feed
+ -vend,--mirror-vendors           Mirror the vendors data feed
+ -vuln,--mirror-vulnerabilities   Mirror the vulnerabilities data feed
+```
+
 ### VulnDB API License
 
 The process of mirroring the contents of VulnDB takes several thousand requests. You may estimate the number of 
@@ -62,19 +101,14 @@ requests required by dividing 100 by the total number of results in each of the 
 complete, make a backup of the contents so that a full mirror does not have to take place again. VulnDB may be 
 licensed based on the number of API calls made to the service. Check with the vendor for details.
 
-Downloading
+
+Compiling
 ----------------
 
-If you do not wish to download sources and compile yourself, [pre-compiled binaries] are available 
-for use. VulnDB Data Mirror is also available on the Maven Central Repository.
-
-```xml
-<dependency>
-    <groupId>us.springett</groupId>
-    <artifactId>vulndb-data-mirror</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-</dependency>
+```bash
+mvn clean package
 ```
+
 
 Related Projects
 ----------------
@@ -97,6 +131,6 @@ Permission to modify and redistribute is granted under the terms of the Apache 2
   [OWASP Dependency-Check]: https://www.owasp.org/index.php/OWASP_Dependency_Check
   [OWASP Dependency-Track]: https://www.owasp.org/index.php/OWASP_Dependency_Track_Project
   [Apache 2.0]: https://github.com/stevespringett/vulndb-data-mirror/blob/master/LICENSE
-  [pre-compiled binaries]: https://github.com/stevespringett/vulndb-data-mirror/releases
+  [Pre-compiled binaries]: https://github.com/stevespringett/vulndb-data-mirror/releases
   [VulnDB]: https://vulndb.cyberriskanalytics.com/
   [Risk Based Security]: https://www.riskbasedsecurity.com/ 
