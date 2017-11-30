@@ -73,6 +73,16 @@ vulndb-data-mirror.sh --consumer-key mykey --consumer-secret mysecret --dir "/pa
 When running, the console output will resemble:
 
 ```
+VulnDB API Status:
+--------------------------------------------------------------------------------
+Organization Name.............: Example Inc.
+Name of User Requesting.......: Jane Doe
+Email of User Requesting......: jane@example.com
+Subscription Expiration Date..: 2018-12-31
+API Calls Allowed per Month...: 25000
+API Calls Made This Month.....: 1523
+--------------------------------------------------------------------------------
+
 Mirroring Vendors feed...
   Processing 18344 of 18344 results
 Mirroring Products feed...
