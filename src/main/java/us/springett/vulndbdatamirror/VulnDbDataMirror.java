@@ -23,8 +23,10 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import us.springett.vulndbdatamirror.client.VulnDbApi;
 import us.springett.vulndbdatamirror.parser.model.Results;
+import us.springett.vulndbdatamirror.parser.model.Status;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -56,6 +58,7 @@ public class VulnDbDataMirror {
         final CommandLineParser parser = new DefaultParser();
         final Options options = new Options();
 
+        options.addOption( "stat", "status-only", false, "Displays VulnDB API status only" );
         options.addOption( "vend", "mirror-vendors", false, "Mirror the vendors data feed" );
         options.addOption( "prod", "mirror-products", false, "Mirror the products data feed" );
         options.addOption( "vuln", "mirror-vulnerabilities", false, "Mirror the vulnerabilities data feed" );
@@ -67,12 +70,21 @@ public class VulnDbDataMirror {
                 .hasArg().required().argName("secret").build()
         );
         options.addOption(Option.builder().longOpt("dir").desc("The target directory to store contents")
-                .hasArg().required().argName("dir").build()
+                .hasArg().argName("dir").build()
         );
 
         try {
             final CommandLine line = parser.parse(options, args);
-            final VulnDbDataMirror mirror = new VulnDbDataMirror(args[0], args[1], args[2]);
+            final VulnDbDataMirror mirror = new VulnDbDataMirror(
+                    line.getOptionValue("consumer-key"),
+                    line.getOptionValue("consumer-secret"),
+                    line.getOptionValue("dir", System.getProperty("user.dir"))
+            );
+
+            mirror.getApiStatus();
+            if (line.hasOption("status-only")) {
+                return;
+            }
 
             if (line.hasOption("mirror-vendors")) {
                 mirror.mirrorVendors();
@@ -117,6 +129,20 @@ public class VulnDbDataMirror {
         if (this.propertyFile != null) {
             readProperties();
         }
+    }
+
+    private void getApiStatus() throws Exception {
+        final VulnDbApi api = new VulnDbApi(this.consumerKey, this.consumerSecret);
+        System.out.print("\nVulnDB API Status:\n");
+        System.out.println(StringUtils.repeat("-", 80));
+        final Status status = api.getStatus();
+        System.out.println("Organization Name.............: " + status.getOrganizationName());
+        System.out.println("Name of User Requesting.......: " + status.getUserNameRequesting());
+        System.out.println("Email of User Requesting......: " + status.getUserEmailRequesting());
+        System.out.println("Subscription Expiration Date..: " + status.getSubscriptionEndDate());
+        System.out.println("API Calls Allowed per Month...: " + status.getApiCallsAllowedPerMonth());
+        System.out.println("API Calls Made This Month.....: " + status.getApiCallsMadeThisMonth());
+        System.out.println(StringUtils.repeat("-", 80));
     }
 
     private void mirrorVendors() throws Exception {

@@ -29,10 +29,10 @@ import us.springett.vulndbdatamirror.parser.model.ExternalReference;
 import us.springett.vulndbdatamirror.parser.model.ExternalText;
 import us.springett.vulndbdatamirror.parser.model.Product;
 import us.springett.vulndbdatamirror.parser.model.Results;
+import us.springett.vulndbdatamirror.parser.model.Status;
 import us.springett.vulndbdatamirror.parser.model.Vendor;
 import us.springett.vulndbdatamirror.parser.model.Version;
 import us.springett.vulndbdatamirror.parser.model.Vulnerability;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -49,6 +49,22 @@ import java.util.List;
 public class VulnDbParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VulnDbParser.class);
+
+    public Status parseStatus(JsonNode jsonNode) {
+        LOGGER.debug("Parsing JSON node");
+
+        final Status status = new Status();
+        final JSONObject root = jsonNode.getObject();
+        status.setOrganizationName(root.optString("organization_name"));
+        status.setUserNameRequesting(root.optString("user_name_requesting"));
+        status.setUserEmailRequesting(root.optString("user_email_address_requesting"));
+        status.setSubscriptionEndDate(root.optString("subscription_end_date"));
+        status.setApiCallsAllowedPerMonth(root.optString("number_of_api_calls_allowed_per_month"));
+        status.setApiCallsMadeThisMonth(root.optString("number_of_api_calls_made_this_month"));
+        status.setVulnDbStatistics(root.optString("vulndb_statistics"));
+        status.setRawStatus(jsonNode.toString());
+        return status;
+    }
 
     public Results parse(JsonNode jsonNode, Class<? extends ApiObject> apiObject) {
         LOGGER.debug("Parsing JSON node");

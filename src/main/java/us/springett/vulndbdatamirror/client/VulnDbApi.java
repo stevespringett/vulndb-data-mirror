@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import us.springett.vulndbdatamirror.parser.VulnDbParser;
 import us.springett.vulndbdatamirror.parser.model.Product;
 import us.springett.vulndbdatamirror.parser.model.Results;
+import us.springett.vulndbdatamirror.parser.model.Status;
 import us.springett.vulndbdatamirror.parser.model.Vendor;
 import us.springett.vulndbdatamirror.parser.model.Version;
 import us.springett.vulndbdatamirror.parser.model.Vulnerability;
@@ -41,6 +42,7 @@ public class VulnDbApi {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VulnDbApi.class);
     private static final String USER_AGENT = "VulnDB Data Mirror (https://github.com/stevespringett/vulndb-data-mirror)";
+    private static final String STATUS_URL = "https://vulndb.cyberriskanalytics.com/api/v1/account_status";
     private static final String VENDORS_URL = "https://vulndb.cyberriskanalytics.com/api/v1/vendors/";
     private static final String PRODUCTS_URL = "https://vulndb.cyberriskanalytics.com/api/v1/products/";
     private static final String VERSIONS_URL = "https://vulndb.cyberriskanalytics.com/api/v1/versions/by_product_id?product_id=";
@@ -60,6 +62,26 @@ public class VulnDbApi {
         this.consumerKey = consumerKey;
         this.consumerSecret = consumerSecret;
     }
+
+    /**
+     * Makes a request and returns {@link Status}.
+     *
+     * @return a Results object
+     * @since 1.0.0
+     */
+    public Status getStatus() {
+        final HttpResponse<JsonNode> response = makeRequest(STATUS_URL);
+        if (response != null) {
+            if (response.getStatus() == 200) {
+                final VulnDbParser parser = new VulnDbParser();
+                return parser.parseStatus(response.getBody());
+            } else {
+                logHttpResponseError(response);
+            }
+        }
+        return new Status();
+    }
+
 
     /**
      * Makes a request and returns {@link Vendor} Results.
@@ -128,8 +150,7 @@ public class VulnDbApi {
                 final VulnDbParser parser = new VulnDbParser();
                 return parser.parse(response.getBody(), clazz);
             } else {
-                LOGGER.error("Response was not successful: " + response.getStatus() + " - " + response.getStatusText() + " - " + response.getBody());
-                System.err.println("\n" + response.getStatus() + " - " + response.getStatusText() + " - " + response.getBody());
+                logHttpResponseError(response);
             }
         }
         return new Results();
@@ -151,5 +172,16 @@ public class VulnDbApi {
             LOGGER.error("An error occurred making request: " + url, e);
         }
         return null;
+    }
+
+    /**
+     * Logs errors from an HttpResponse.
+     *
+     * @param response the response from the server
+     * @since 1.0.0
+     */
+    private void logHttpResponseError(HttpResponse<JsonNode> response) {
+        LOGGER.error("Response was not successful: " + response.getStatus() + " - " + response.getStatusText() + " - " + response.getBody());
+        System.err.println("\n" + response.getStatus() + " - " + response.getStatusText() + " - " + response.getBody());
     }
 }

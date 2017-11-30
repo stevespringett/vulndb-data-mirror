@@ -92,6 +92,7 @@ usage: vulndb-data-mirror
  -prod,--mirror-products          Mirror the products data feed
  -vend,--mirror-vendors           Mirror the vendors data feed
  -vuln,--mirror-vulnerabilities   Mirror the vulnerabilities data feed
+ -stat,--status-only              Displays VulnDB API status only
 ```
 
 ### VulnDB API License
