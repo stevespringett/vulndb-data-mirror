@@ -25,11 +25,11 @@ import java.util.List;
  * @author Steve Springett
  * @since 1.0.0
  */
-public class Results {
+public class Results<T> {
 
     private int page;
     private int total;
-    private List<Object> results = new ArrayList<>();
+    private List<T> results = new ArrayList<>();
     private String rawResults;
 
     public int getPage() {
@@ -48,7 +48,7 @@ public class Results {
         this.total = total;
     }
 
-    public List<Object> getResults() {
+    public List<T> getResults() {
         return results;
     }
 
@@ -57,7 +57,7 @@ public class Results {
         this.results = objects;
     }
 
-    public void add(Object object) {
+    public void add(T object) {
         results.add(object);
     }
 

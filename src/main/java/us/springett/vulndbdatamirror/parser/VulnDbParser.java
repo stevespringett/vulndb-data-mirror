@@ -25,6 +25,8 @@ import us.springett.vulndbdatamirror.parser.model.ApiObject;
 import us.springett.vulndbdatamirror.parser.model.Author;
 import us.springett.vulndbdatamirror.parser.model.CPE;
 import us.springett.vulndbdatamirror.parser.model.Classification;
+import us.springett.vulndbdatamirror.parser.model.CvssV2Metric;
+import us.springett.vulndbdatamirror.parser.model.CvssV3Metric;
 import us.springett.vulndbdatamirror.parser.model.ExternalReference;
 import us.springett.vulndbdatamirror.parser.model.ExternalText;
 import us.springett.vulndbdatamirror.parser.model.Product;
@@ -66,10 +68,10 @@ public class VulnDbParser {
         return status;
     }
 
-    public Results parse(JsonNode jsonNode, Class<? extends ApiObject> apiObject) {
+    public <T> Results<T> parse(JsonNode jsonNode, Class<? extends ApiObject> apiObject) {
         LOGGER.debug("Parsing JSON node");
 
-        final Results results = new Results();
+        final Results<T> results = new Results<>();
         final JSONObject root = jsonNode.getObject();
         results.setPage(root.getInt("current_page"));
         results.setTotal(root.getInt("total_entries"));
@@ -88,11 +90,11 @@ public class VulnDbParser {
         return results;
     }
 
-    public Results parse(String jsonData, Class<? extends ApiObject> apiObject) {
+    public <T> Results<T> parse(String jsonData, Class<? extends ApiObject> apiObject) {
         return parse(new JsonNode(jsonData), apiObject);
     }
 
-    public Results parse(File file, Class<? extends ApiObject> apiObject) throws IOException {
+    public <T> Results<T> parse(File file, Class<? extends ApiObject> apiObject) throws IOException {
         String jsonData = new String(Files.readAllBytes(Paths.get(file.toURI())));
         return parse(new JsonNode(jsonData), apiObject);
     }
@@ -234,6 +236,50 @@ public class VulnDbParser {
                         externalText.setType(StringUtils.trimToNull(jso.optString("type", null)));
                         externalText.setValue(StringUtils.trimToNull(jso.optString("value", null)));
                         vulnerability.addExtText(externalText);
+                    }
+                }
+
+                final JSONArray cvssv2Metrics = object.optJSONArray("cvss_metrics");
+                if (cvssv2Metrics != null) {
+                    for (int j = 0; j < cvssv2Metrics.length(); j++) {
+                        final JSONObject jso = cvssv2Metrics.getJSONObject(j);
+                        final CvssV2Metric metric = new CvssV2Metric();
+                        metric.setId(jso.getInt("id"));
+                        metric.setAccessComplexity(StringUtils.trimToNull(jso.optString("access_complexity", null)));
+                        metric.setCveId(StringUtils.trimToNull(jso.optString("cve_id", null)));
+                        metric.setSource(StringUtils.trimToNull(jso.optString("source", null)));
+                        metric.setAvailabilityImpact(StringUtils.trimToNull(jso.optString("availability_impact", null)));
+                        metric.setConfidentialityImpact(StringUtils.trimToNull(jso.optString("confidentiality_impact", null)));
+                        metric.setAuthentication(StringUtils.trimToNull(jso.optString("authentication", null)));
+                        metric.setCalculatedCvssBaseScore((jso.optBigDecimal("calculated_cvss_base_score", null)));
+                        metric.setGeneratedOn(StringUtils.trimToNull(jso.optString("generated_on", null)));
+                        metric.setScore((jso.optBigDecimal("score", null)));
+                        metric.setAccessVector(StringUtils.trimToNull(jso.optString("access_vector", null)));
+                        metric.setIntegrityImpact(StringUtils.trimToNull(jso.optString("integrity_impact", null)));
+                        vulnerability.addCvssV2Metric(metric);
+                    }
+                }
+
+                final JSONArray cvssv3Metrics = object.optJSONArray("cvss_version_three_metrics");
+                if (cvssv3Metrics != null) {
+                    for (int j = 0; j < cvssv3Metrics.length(); j++) {
+                        final JSONObject jso = cvssv3Metrics.getJSONObject(j);
+                        final CvssV3Metric metric = new CvssV3Metric();
+                        metric.setId(jso.getInt("id"));
+                        metric.setAttackComplexity(StringUtils.trimToNull(jso.optString("attack_complexity", null)));
+                        metric.setScope(StringUtils.trimToNull(jso.optString("scope", null)));
+                        metric.setAttackVector(StringUtils.trimToNull(jso.optString("attack_vector", null)));
+                        metric.setAvailabilityImpact(StringUtils.trimToNull(jso.optString("availability_impact", null)));
+                        metric.setScore(jso.optBigDecimal("score", null));
+                        metric.setPrivilegesRequired(StringUtils.trimToNull(jso.optString("privileges_required", null)));
+                        metric.setUserInteraction(StringUtils.trimToNull(jso.optString("user_interaction", null)));
+                        metric.setCveId(StringUtils.trimToNull(jso.optString("cve_id", null)));
+                        metric.setSource(StringUtils.trimToNull(jso.optString("source", null)));
+                        metric.setConfidentialityImpact(StringUtils.trimToNull(jso.optString("confidentiality_impact", null)));
+                        metric.setCalculatedCvssBaseScore(jso.optBigDecimal("calculated_cvss_base_score", null));
+                        metric.setGeneratedOn(StringUtils.trimToNull(jso.optString("generated_on", null)));
+                        metric.setIntegrityImpact(StringUtils.trimToNull(jso.optString("integrity_impact", null)));
+                        vulnerability.addCvssV3Metric(metric);
                     }
                 }
 
