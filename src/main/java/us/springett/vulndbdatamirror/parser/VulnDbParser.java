@@ -29,6 +29,7 @@ import us.springett.vulndbdatamirror.parser.model.CvssV2Metric;
 import us.springett.vulndbdatamirror.parser.model.CvssV3Metric;
 import us.springett.vulndbdatamirror.parser.model.ExternalReference;
 import us.springett.vulndbdatamirror.parser.model.ExternalText;
+import us.springett.vulndbdatamirror.parser.model.NvdAdditionalInfo;
 import us.springett.vulndbdatamirror.parser.model.Product;
 import us.springett.vulndbdatamirror.parser.model.Results;
 import us.springett.vulndbdatamirror.parser.model.Status;
@@ -280,6 +281,18 @@ public class VulnDbParser {
                         metric.setGeneratedOn(StringUtils.trimToNull(jso.optString("generated_on", null)));
                         metric.setIntegrityImpact(StringUtils.trimToNull(jso.optString("integrity_impact", null)));
                         vulnerability.addCvssV3Metric(metric);
+                    }
+                }
+
+                final JSONArray nvdInfo = object.optJSONArray("nvd_additional_information");
+                if (nvdInfo != null) {
+                    for (int j = 0; j < nvdInfo.length(); j++) {
+                        final JSONObject jso = nvdInfo.getJSONObject(j);
+                        final NvdAdditionalInfo nvdAdditionalInfo = new NvdAdditionalInfo();
+                        nvdAdditionalInfo.setSummary(StringUtils.trimToNull(jso.optString("summary", null)));
+                        nvdAdditionalInfo.setCweId(StringUtils.trimToNull(jso.optString("cwe_id", null)));
+                        nvdAdditionalInfo.setCveId(StringUtils.trimToNull(jso.optString("cve_id", null)));
+                        vulnerability.setNvdAdditionalInfo(nvdAdditionalInfo);
                     }
                 }
 
