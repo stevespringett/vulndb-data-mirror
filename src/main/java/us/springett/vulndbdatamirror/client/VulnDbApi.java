@@ -47,7 +47,7 @@ public class VulnDbApi {
     private static final String PRODUCTS_URL = "https://vulndb.cyberriskanalytics.com/api/v1/products/";
     private static final String VERSIONS_URL = "https://vulndb.cyberriskanalytics.com/api/v1/versions/by_product_id?product_id=";
     private static final String VULNERABILITIES_URL = "https://vulndb.cyberriskanalytics.com/api/v1/vulnerabilities/"
-            + "?nested=true&additional_info=true&show_cpe=true&show_cvss_v3=true&package_info=true&vtem=true";
+            + "?nested=true&additional_info=true&show_cpe_full=true&show_cvss_v3=true&package_info=true&vtem=true";
 
     private String consumerKey;
     private String consumerSecret;
