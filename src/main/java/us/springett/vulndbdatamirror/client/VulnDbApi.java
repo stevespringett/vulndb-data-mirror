@@ -15,15 +15,15 @@
  */
 package us.springett.vulndbdatamirror.client;
 
+import kong.unirest.HttpResponse;
+import kong.unirest.JsonNode;
+import kong.unirest.Unirest;
+import kong.unirest.UnirestException;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.exception.OAuthException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import unirest.HttpResponse;
-import unirest.JsonNode;
-import unirest.Unirest;
-import unirest.UnirestException;
 import us.springett.vulndbdatamirror.parser.VulnDbParser;
 import us.springett.vulndbdatamirror.parser.model.Product;
 import us.springett.vulndbdatamirror.parser.model.Results;

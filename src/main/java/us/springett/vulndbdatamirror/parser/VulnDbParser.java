@@ -15,12 +15,12 @@
  */
 package us.springett.vulndbdatamirror.parser;
 
+import kong.unirest.JsonNode;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import unirest.JsonNode;
 import us.springett.vulndbdatamirror.parser.model.ApiObject;
 import us.springett.vulndbdatamirror.parser.model.Author;
 import us.springett.vulndbdatamirror.parser.model.CPE;
