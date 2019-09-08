@@ -37,7 +37,7 @@
         <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
         <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
         <maven.github.release.plugin.version>1.2.0</maven.github.release.plugin.version>
-        <maven.appassembler.plugin.version>1.10</maven.appassembler.plugin.version>
+        <maven.appassembler.plugin.version>2.1.0</maven.appassembler.plugin.version>
         <maven.assembly.plugin.version>3.1.0</maven.assembly.plugin.version>
         <!-- Library Versions -->
         <lib.commons.cli.version>1.4</lib.commons.cli.version>
