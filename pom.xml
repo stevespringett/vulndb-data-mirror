@@ -184,6 +184,9 @@
                             <directory>${project.build.directory}</directory>
                             <includes>
                                 <include>${project.build.finalName}.jar</include>
+                                <include>${project.build.finalName}-javadoc.jar</include>
+                                <include>${project.build.finalName}-sources.jar</include>
+                                <include>${project.build.finalName}-release.zip</include>
                             </includes>
                         </fileSet>
                     </fileSets>
