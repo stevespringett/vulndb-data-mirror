@@ -6,8 +6,7 @@ VulnDB Data Mirror
 A simple Java command-line utility to mirror the entire contents of the [VulnDB] service from [Risk Based Security].
 
 The intended purpose of vulndb-data-mirror is to be able to replicate the VulnDB vulnerabiity 
-data inside a company firewall so that local (faster) access to data can be achieved and reused 
-by the [OWASP Dependency-Check] and [OWASP Dependency-Track] ecosystem.
+data inside a company firewall so that local (faster) access to data can be achieved.
 
 In addition to mirroring functionality, VulnDB Data Mirror includes a parser that can automatically
 convert JSON data to model objects (defined as POJO's). This greatly eases the ramp-up time needed
@@ -15,9 +14,6 @@ to consume the VulnDB data in a programmatic way.
 
 The VulnDB service utilizes a paginated REST API that must be walked for each type of feed. 
 Due to the large data-set the service provides, it may take an hour or more to mirror the contents. 
-Because of the performance impact due to this design, a separate mirroring utility is favorable
-instead of native VulnDB mirroring support in Dependency-Check or Dependency-Track.
-VulnDB Data Mirror serves this purpose.
 
 For best results, use vulndb-data-mirror with cron or another scheduler to keep the mirrored data fresh.
 
@@ -104,6 +100,15 @@ usage: vulndb-data-mirror
  -vuln,--mirror-vulnerabilities   Mirror the vulnerabilities data feed
  -stat,--status-only              Displays VulnDB API status only
 ```
+
+### Mirror Recovery
+
+VulnDB Data Mirror can recover from several types of errors. Upon a successful request to VulnDB, this utility 
+will store a timestamp and the last successful page number processed. Pagination of VulnDB defaults to retrieving 
+100 records at a time. In the event of a network or service error, it is possible to start again where the mirroring 
+left off.
+
+This information is stored in `update.properties` located in the specified mirror directory.
 
 ### VulnDB API License
 
