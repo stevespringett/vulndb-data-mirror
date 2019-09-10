@@ -136,16 +136,10 @@ Copyright & License
 
 vulndb-data-mirror is Copyright (c) Steve Springett. All Rights Reserved.
 
-Dependency-Track is Copyright (c) Steve Springett. All Rights Reserved.
-
-Dependency-Check is Copyright (c) Jeremy Long. All Rights Reserved.
-
 VulnDB is Copyright (c) Risk Based Security. All Rights Reserved.
 
 Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE] [Apache 2.0] file for the full license.
 
-  [OWASP Dependency-Check]: https://www.owasp.org/index.php/OWASP_Dependency_Check
-  [OWASP Dependency-Track]: https://www.owasp.org/index.php/OWASP_Dependency_Track_Project
   [Apache 2.0]: https://github.com/stevespringett/vulndb-data-mirror/blob/master/LICENSE
   [Pre-compiled binaries]: https://github.com/stevespringett/vulndb-data-mirror/releases
   [VulnDB]: https://vulndb.cyberriskanalytics.com/
