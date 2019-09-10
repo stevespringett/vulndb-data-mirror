@@ -148,7 +148,9 @@ public class VulnDbApi {
         if (response != null) {
             if (response.getStatus() == 200) {
                 final VulnDbParser parser = new VulnDbParser();
-                return parser.parse(response.getBody(), clazz);
+                Results results = parser.parse(response.getBody(), clazz);
+                results.setSuccessful(true);
+                return results;
             } else {
                 logHttpResponseError(response);
             }

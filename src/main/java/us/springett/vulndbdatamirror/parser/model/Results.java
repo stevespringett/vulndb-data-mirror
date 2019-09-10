@@ -31,6 +31,7 @@ public class Results<T> {
     private int total;
     private List<T> results = new ArrayList<>();
     private String rawResults;
+    private boolean successful;
 
     public int getPage() {
         return page;
@@ -67,5 +68,13 @@ public class Results<T> {
 
     public void setRawResults(String rawResults) {
         this.rawResults = rawResults;
+    }
+
+    public boolean isSuccessful() {
+        return successful;
+    }
+
+    public void setSuccessful(boolean isSuccessful) {
+        this.successful = isSuccessful;
     }
 }

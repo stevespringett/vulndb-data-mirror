@@ -152,8 +152,12 @@ public class VulnDbDataMirror {
         boolean more = true;
         while (more) {
             final Results results = api.getVendors(100, page);
-            more = processResults(this.outputDir, VulnDbApi.Type.VENDORS, results);
-            page++;
+            if (results.isSuccessful()) {
+                more = processResults(this.outputDir, VulnDbApi.Type.VENDORS, results);
+                page++;
+            } else {
+                System.exit(1);
+            }
         }
         if (downloadFailed) {
             System.exit(1);
@@ -167,8 +171,12 @@ public class VulnDbDataMirror {
         boolean more = true;
         while (more) {
             final Results results = api.getProducts(100, page);
-            more = processResults(this.outputDir, VulnDbApi.Type.PRODUCTS, results);
-            page++;
+            if (results.isSuccessful()) {
+                more = processResults(this.outputDir, VulnDbApi.Type.PRODUCTS, results);
+                page++;
+            } else {
+                System.exit(1);
+            }
         }
         if (downloadFailed) {
             System.exit(1);
@@ -182,8 +190,12 @@ public class VulnDbDataMirror {
         boolean more = true;
         while (more) {
             final Results results = api.getVulnerabilities(100, page);
-            more = processResults(this.outputDir, VulnDbApi.Type.VULNERABILITIES, results);
-            page++;
+            if (results.isSuccessful()) {
+                more = processResults(this.outputDir, VulnDbApi.Type.VULNERABILITIES, results);
+                page++;
+            } else {
+                System.exit(1);
+            }
         }
         if (downloadFailed) {
             System.exit(1);
