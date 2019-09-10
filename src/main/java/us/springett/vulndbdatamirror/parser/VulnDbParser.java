@@ -137,16 +137,27 @@ public class VulnDbParser {
             vendors = new ArrayList<>();
             for (int i = 0; i < rso.length(); i++) {
                 final JSONObject object = rso.getJSONObject(i);
-                final Vendor vendor = new Vendor();
-                vendor.setId(object.getInt("id"));
-                vendor.setName(StringUtils.trimToNull(object.optString("name", null)));
-                vendor.setShortName(StringUtils.trimToNull(object.optString("short_name", null)));
-                vendor.setVendorUrl(StringUtils.trimToNull(object.optString("vendor_url", null)));
-                vendor.setProducts(parseProducts(object.optJSONArray("products")));
-                vendors.add(vendor);
+                if (object.has("vendor")) { // We need to go more more level deep to get the vendor (e.g. getVulnerabilitiesByCpe()
+                    final JSONObject childObject = object.getJSONObject("vendor");
+                    Vendor vendor = parseVendor(childObject);
+                    vendors.add(vendor);
+                } else { // This is the level where mirror of Vendors reside
+                    Vendor vendor = parseVendor(object);
+                    vendors.add(vendor);
+                }
             }
         }
         return vendors;
+    }
+
+    private Vendor parseVendor(JSONObject object) {
+        final Vendor vendor = new Vendor();
+        vendor.setId(object.getInt("id"));
+        vendor.setName(StringUtils.trimToNull(object.optString("name", null)));
+        vendor.setShortName(StringUtils.trimToNull(object.optString("short_name", null)));
+        vendor.setVendorUrl(StringUtils.trimToNull(object.optString("vendor_url", null)));
+        vendor.setProducts(parseProducts(object.optJSONArray("products")));
+        return vendor;
     }
 
     private List<Version> parseVersions(JSONArray rso) {
