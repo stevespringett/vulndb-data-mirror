@@ -180,14 +180,18 @@ public class VulnDbApi {
         if (response != null) {
             if (response.getStatus() == 200) {
                 final VulnDbParser parser = new VulnDbParser();
-                Results results = parser.parse(response.getBody(), clazz);
-                results.setSuccessful(true);
+                final Results results = parser.parse(response.getBody(), clazz);
                 return results;
             } else {
+                final Results results = new Results();
+                results.setErrorCondition("An unexpected response was returned from VulnDB. Request unsuccessful: " + response.getStatus() + " - " + response.getStatusText() + " - " + response.getBody());
                 logHttpResponseError(response);
+                return results;
             }
         }
-        return new Results();
+        final Results results = new Results();
+        results.setErrorCondition("No response was returned from VulnDB. No further information is available.");
+        return results;
     }
 
     /**

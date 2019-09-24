@@ -31,7 +31,7 @@ public class Results<T> {
     private int total;
     private List<T> results = new ArrayList<>();
     private String rawResults;
-    private boolean successful;
+    private String errorCondition;
 
     public int getPage() {
         return page;
@@ -71,10 +71,14 @@ public class Results<T> {
     }
 
     public boolean isSuccessful() {
-        return successful;
+        return errorCondition == null;
     }
 
-    public void setSuccessful(boolean isSuccessful) {
-        this.successful = isSuccessful;
+    public String getErrorCondition() {
+        return errorCondition;
+    }
+
+    public void setErrorCondition(String errorCondition) {
+        this.errorCondition = errorCondition;
     }
 }
