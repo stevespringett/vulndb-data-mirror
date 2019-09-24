@@ -148,9 +148,9 @@ public class CvssV2Metric {
     }
 
     public CvssV2 toNormalizedMetric() {
-        CvssV2 cvss = new CvssV2();
+        final CvssV2 cvss = new CvssV2();
 
-        if ("ADJACENT_NETWORK".equals(this.accessVector)) {
+        if ("ADJACENT_NETWORK".equals(this.accessVector) || "ADJACENT".equals(this.accessVector)) {
             cvss.attackVector(CvssV2.AttackVector.ADJACENT);
         } else if ("LOCAL".equals(this.accessVector)) {
             cvss.attackVector(CvssV2.AttackVector.LOCAL);

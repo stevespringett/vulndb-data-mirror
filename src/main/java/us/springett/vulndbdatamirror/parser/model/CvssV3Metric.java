@@ -168,8 +168,18 @@ public class CvssV3Metric {
     }
 
     public CvssV3 toNormalizedMetric() {
-        CvssV3 cvss = new CvssV3();
-        cvss.attackVector(CvssV3.AttackVector.valueOf(this.attackVector));
+        final CvssV3 cvss = new CvssV3();
+
+        if ("ADJACENT_NETWORK".equals(this.attackVector) || "ADJACENT".equals(this.attackVector)) {
+            cvss.attackVector(CvssV3.AttackVector.ADJACENT);
+        } else if ("LOCAL".equals(this.attackVector)) {
+            cvss.attackVector(CvssV3.AttackVector.LOCAL);
+        } else if ("NETWORK".equals(this.attackVector)) {
+            cvss.attackVector(CvssV3.AttackVector.NETWORK);
+        } else if ("PHYSICAL".equals(this.attackVector)) {
+            cvss.attackVector(CvssV3.AttackVector.PHYSICAL);
+        }
+
         cvss.attackComplexity(CvssV3.AttackComplexity.valueOf(this.attackComplexity));
         cvss.privilegesRequired(CvssV3.PrivilegesRequired.valueOf(this.privilegesRequired));
         cvss.userInteraction(CvssV3.UserInteraction.valueOf(this.userInteraction));
