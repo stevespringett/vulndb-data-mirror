@@ -5,7 +5,7 @@
     <groupId>us.springett</groupId>
     <artifactId>vulndb-data-mirror</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <name>VulnDB Data Mirror</name>
     <description>
@@ -63,7 +63,7 @@
         <connection>scm:git:git@github.com:stevespringett/vulndb-data-mirror.git</connection>
         <url>https://github.com/stevespringett/vulndb-data-mirror.git</url>
         <developerConnection>scm:git:git@github.com:stevespringett/vulndb-data-mirror.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>vulndb-data-mirror-1.0.0</tag>
     </scm>
 
     <issueManagement>
