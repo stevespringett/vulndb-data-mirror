@@ -33,9 +33,8 @@ Distribution
 VulnDB Data Mirror is distributed two different ways. 
 
 
-[Pre-compiled binaries] WILL be available (once 1.0.0 is released) from GitHub. This distribution
-is intended to be extracted and executed in order to run and maintain a working VulnDB mirror. This is the
-recommended method for most users.
+[Pre-compiled binaries] are available. This distribution is intended to be extracted and executed in order to run 
+and maintain a working VulnDB mirror. This is the recommended method for most users.
 
 
 The standalone library is available in the Maven Central 
