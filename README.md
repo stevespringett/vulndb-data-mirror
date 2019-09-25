@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/stevespringett/vulndb-data-mirror.svg?branch=master)](https://travis-ci.org/stevespringett/vulndb-data-mirror)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/us.springett/vulndb-data-mirror/badge.svg)](https://maven-badges.herokuapp.com/maven-central/us.springett/vulndb-data-mirror)
+[![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)][License]
 
 VulnDB Data Mirror
 ================
@@ -138,9 +140,9 @@ vulndb-data-mirror is Copyright (c) Steve Springett. All Rights Reserved.
 
 VulnDB is Copyright (c) Risk Based Security. All Rights Reserved.
 
-Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE] [Apache 2.0] file for the full license.
+Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [License] file for the full license.
 
-  [Apache 2.0]: https://github.com/stevespringett/vulndb-data-mirror/blob/master/LICENSE
+  [License]: https://github.com/stevespringett/vulndb-data-mirror/blob/master/LICENSE
   [Pre-compiled binaries]: https://github.com/stevespringett/vulndb-data-mirror/releases
   [VulnDB]: https://vulndb.cyberriskanalytics.com/
   [Risk Based Security]: https://www.riskbasedsecurity.com/ 
