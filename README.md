@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/stevespringett/vulndb-data-mirror.svg?branch=master)](https://travis-ci.org/stevespringett/vulndb-data-mirror)
+[![Build Status](https://github.com/stevespringett/vulndb-data-mirror/workflows/Maven%20CI/badge.svg)](https://github.com/stevespringett/vulndb-data-mirror/actions?workflow=Maven+CI)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/us.springett/vulndb-data-mirror/badge.svg)](https://maven-badges.herokuapp.com/maven-central/us.springett/vulndb-data-mirror)
 [![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)][License]
 
