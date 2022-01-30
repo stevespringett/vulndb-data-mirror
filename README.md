@@ -45,7 +45,7 @@ Repository. This distribution is useful for programmatic access to the mirroring
 <dependency>
     <groupId>us.springett</groupId>
     <artifactId>vulndb-data-mirror</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
