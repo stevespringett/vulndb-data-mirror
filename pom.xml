@@ -41,7 +41,7 @@
         <maven.appassembler.plugin.version>2.1.0</maven.appassembler.plugin.version>
         <maven.assembly.plugin.version>3.3.0</maven.assembly.plugin.version>
         <!-- Library Versions -->
-        <lib.commons.cli.version>1.4</lib.commons.cli.version>
+        <lib.commons.cli.version>1.5.0</lib.commons.cli.version>
         <lib.commons.io.version>2.8.0</lib.commons.io.version>
         <lib.commons.lang3.version>3.12.0</lib.commons.lang3.version>
         <lib.slf4j.version>1.7.35</lib.slf4j.version>
