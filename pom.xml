@@ -36,7 +36,7 @@
         <maven.cyclonedx.plugin.version>2.5.3</maven.cyclonedx.plugin.version>
         <maven.javadoc.plugin.version>3.1.1</maven.javadoc.plugin.version>
         <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
-        <maven.jar.plugin.version>3.1.2</maven.jar.plugin.version>
+        <maven.jar.plugin.version>3.2.2</maven.jar.plugin.version>
         <maven.github.release.plugin.version>1.4.0</maven.github.release.plugin.version>
         <maven.appassembler.plugin.version>2.1.0</maven.appassembler.plugin.version>
         <maven.assembly.plugin.version>3.3.0</maven.assembly.plugin.version>
@@ -270,7 +270,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-enforcer-plugin</artifactId>
-                        <version>1.4.1</version>
+                        <version>3.0.0</version>
                         <executions>
                             <execution>
                                 <id>enforce-java</id>
