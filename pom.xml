@@ -45,7 +45,7 @@
         <lib.commons.io.version>2.11.0</lib.commons.io.version>
         <lib.commons.lang3.version>3.12.0</lib.commons.lang3.version>
         <lib.slf4j.version>1.7.35</lib.slf4j.version>
-        <lib.unirest.version>3.13.6</lib.unirest.version>
+        <lib.unirest.version>3.13.8</lib.unirest.version>
         <lib.signpost-core.version>2.1.1</lib.signpost-core.version>
     </properties>
 
