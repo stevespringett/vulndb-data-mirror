@@ -143,5 +143,5 @@ Permission to modify and redistribute is granted under the terms of the Apache 2
 
   [License]: https://github.com/stevespringett/vulndb-data-mirror/blob/master/LICENSE
   [Pre-compiled binaries]: https://github.com/stevespringett/vulndb-data-mirror/releases
-  [VulnDB]: https://vulndb.cyberriskanalytics.com/
+  [VulnDB]: https://vulndb.flashpoint.io/
   [Risk Based Security]: https://www.riskbasedsecurity.com/ 
