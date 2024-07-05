@@ -72,6 +72,9 @@ public class VulnDbDataMirror {
         options.addOption(Option.builder().longOpt("dir").desc("The target directory to store contents")
                 .hasArg().argName("dir").build()
         );
+        options.addOption(Option.builder("u").longOpt("mirror-update").desc("Mirror just the updated vulnerabilities data feed")
+                .hasArg().argName("hours").build()
+        );
 
         try {
             final CommandLine line = parser.parse(options, args);
@@ -85,7 +88,6 @@ public class VulnDbDataMirror {
             if (line.hasOption("status-only")) {
                 return;
             }
-
             if (line.hasOption("mirror-vendors")) {
                 mirror.mirrorVendors();
             }
@@ -94,6 +96,11 @@ public class VulnDbDataMirror {
             }
             if (line.hasOption("mirror-vulnerabilities")) {
                 mirror.mirrorVulnerabilities();
+            }
+            if (line.hasOption("mirror-update")) {
+                System.out.println("Fetching last updating vulnerabilities");
+                final int hours = Integer.parseInt(line.getOptionValue("mirror-update"));
+                mirror.mirrorUpdatedVulnerabilities(hours);
             }
             if (!(line.hasOption("mirror-vendors") && line.hasOption("mirror-products") && line.hasOption("mirror-vulnerabilities"))) {
                 System.out.println("A feed to mirror was not specified. Defaulting to mirror all feeds.");
@@ -190,6 +197,25 @@ public class VulnDbDataMirror {
         boolean more = true;
         while (more) {
             final Results results = api.getVulnerabilities(100, page);
+            if (results.isSuccessful()) {
+                more = processResults(this.outputDir, VulnDbApi.Type.VULNERABILITIES, results);
+                page++;
+            } else {
+                System.exit(1);
+            }
+        }
+        if (downloadFailed) {
+            System.exit(1);
+        }
+    }
+
+    private void mirrorUpdatedVulnerabilities(final int hours_ago) throws Exception {
+        final VulnDbApi api = new VulnDbApi(this.consumerKey, this.consumerSecret);
+        System.out.print("\nMirroring Updated Vulnerabilities feed...\n");
+        int page = lastSuccessfulPage("vulnerabilities");
+        boolean more = true;
+        while (more) {
+            final Results results = api.getUpdatedVulnerabilities(100, page,hours_ago);
             if (results.isSuccessful()) {
                 more = processResults(this.outputDir, VulnDbApi.Type.VULNERABILITIES, results);
                 page++;
