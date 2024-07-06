@@ -37,7 +37,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 /**
- * OAuth access to the VulnDB API. For more information visit https://vulndb.cyberriskanalytics.com/ .
+ * OAuth access to the VulnDB API. For more information visit https://vulndb.flashpoint.io/ .
  *
  * @author Steve Springett
  * @since 1.0.0
@@ -46,13 +46,13 @@ public class VulnDbApi {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VulnDbApi.class);
     private static final String USER_AGENT = "VulnDB Data Mirror (https://github.com/stevespringett/vulndb-data-mirror)";
-    private static final String STATUS_URL = "https://vulndb.cyberriskanalytics.com/api/v1/account_status";
-    private static final String VENDORS_URL = "https://vulndb.cyberriskanalytics.com/api/v1/vendors/";
-    private static final String PRODUCTS_URL = "https://vulndb.cyberriskanalytics.com/api/v1/products/";
-    private static final String VERSIONS_URL = "https://vulndb.cyberriskanalytics.com/api/v1/versions/by_product_id?product_id=";
-    private static final String VULNERABILITIES_URL = "https://vulndb.cyberriskanalytics.com/api/v1/vulnerabilities/"
+    private static final String STATUS_URL = "https://vulndb.flashpoint.io/api/v1/account_status";
+    private static final String VENDORS_URL = "https://vulndb.flashpoint.io/api/v1/vendors/";
+    private static final String PRODUCTS_URL = "https://vulndb.flashpoint.io/api/v1/products/";
+    private static final String VERSIONS_URL = "https://vulndb.flashpoint.io/api/v1/versions/by_product_id?product_id=";
+    private static final String VULNERABILITIES_URL = "https://vulndb.flashpoint.io/api/v1/vulnerabilities/"
             + "?nested=true&additional_info=true&show_cpe_full=true&show_cvss_v3=true&package_info=true&vtem=true";
-    private static final String VULNERABILITIES_FIND_BY_CPE_URL = "https://vulndb.cyberriskanalytics.com/api/v1/vulnerabilities/find_by_cpe?&cpe=";
+    private static final String VULNERABILITIES_FIND_BY_CPE_URL = "https://vulndb.flashpoint.io/api/v1/vulnerabilities/find_by_cpe?&cpe=";
 
     private final UnirestInstance ui;
     private final String consumerKey;
