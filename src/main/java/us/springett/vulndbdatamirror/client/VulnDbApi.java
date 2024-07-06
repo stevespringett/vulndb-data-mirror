@@ -53,6 +53,8 @@ public class VulnDbApi {
     private static final String VULNERABILITIES_URL = "https://vulndb.flashpoint.io/api/v1/vulnerabilities/"
             + "?nested=true&additional_info=true&show_cpe_full=true&show_cvss_v3=true&package_info=true&vtem=true";
     private static final String VULNERABILITIES_FIND_BY_CPE_URL = "https://vulndb.flashpoint.io/api/v1/vulnerabilities/find_by_cpe?&cpe=";
+    //Returns vulnerabilities that were updated or created in the last specified number of hours.
+    private static final String VULNERABILITIES_LAST_UPDATED = "https://vulndb.flashpoint.io/api/v1/vulnerabilities/find_by_time_full?hours_ago=";
 
     private final UnirestInstance ui;
     private final String consumerKey;
@@ -162,6 +164,20 @@ public class VulnDbApi {
             LOGGER.error("An error occurred while URL encoding a CPE", e);
         }
         return getResults(VULNERABILITIES_FIND_BY_CPE_URL + encodedCpe, Vulnerability.class, size, page);
+    }
+
+    /**
+     * Makes a request and returns Last Updated {@link Vulnerability} Results.
+     * Includes the following options preset for ease of use and performance improvements:
+     * nested=true, additional_info=true, show_cpe_full=true, full_reference_url=true, show_cvss_v3=true, package_info=true, and library_info=true
+     * @param size the number of items to fetch
+     * @param page the page number of the fetched items
+     * @param hours_ago The number of hours far back you want to check for updated vulnerabilities
+     * @return a Results object
+     * @since 1.0.0
+     */
+    public Results getUpdatedVulnerabilities(final int size, final int page, final int hours_ago) {
+        return getResults(VULNERABILITIES_LAST_UPDATED + hours_ago, Vulnerability.class, size, page);
     }
 
     /**
