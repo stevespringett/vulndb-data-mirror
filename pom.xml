@@ -73,8 +73,8 @@
     </issueManagement>
 
     <ciManagement>
-        <system>travis-ci</system>
-        <url>https://travis-ci.org/stevespringett/vulndb-data-mirror</url>
+        <system>GitHub</system>
+        <url>https://github.com/stevespringett/vulndb-data-mirror/actions</url>
     </ciManagement>
 
     <distributionManagement>
