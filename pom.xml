@@ -124,13 +124,6 @@
             <version>${lib.unirest.version}</version>
             <scope>compile</scope>
         </dependency>
-        <!-- OAuth 1.0a Signing Request -->
-        <dependency>
-            <groupId>oauth.signpost</groupId>
-            <artifactId>signpost-core</artifactId>
-            <version>${lib.signpost-core.version}</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
     <build>
