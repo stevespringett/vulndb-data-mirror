@@ -15,16 +15,17 @@
  */
 package us.springett.vulndbdatamirror.client;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
-import kong.unirest.UnirestException;
 import kong.unirest.UnirestInstance;
-import oauth.signpost.OAuthConsumer;
-import oauth.signpost.basic.DefaultOAuthConsumer;
-import oauth.signpost.exception.OAuthException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import us.springett.vulndbdatamirror.parser.VulnDbParser;
 import us.springett.vulndbdatamirror.parser.model.Product;
 import us.springett.vulndbdatamirror.parser.model.Results;
@@ -32,12 +33,9 @@ import us.springett.vulndbdatamirror.parser.model.Status;
 import us.springett.vulndbdatamirror.parser.model.Vendor;
 import us.springett.vulndbdatamirror.parser.model.Version;
 import us.springett.vulndbdatamirror.parser.model.Vulnerability;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 /**
- * OAuth access to the VulnDB API. For more information visit https://vulndb.flashpoint.io/ .
+ * OAuth2 access to the VulnDB API. For more information visit https://vulndb.flashpoint.io/ .
  *
  * @author Steve Springett
  * @since 1.0.0
@@ -55,10 +53,11 @@ public class VulnDbApi {
     private static final String VULNERABILITIES_FIND_BY_CPE_URL = "https://vulndb.flashpoint.io/api/v1/vulnerabilities/find_by_cpe?&cpe=";
     //Returns vulnerabilities that were updated or created in the last specified number of hours.
     private static final String VULNERABILITIES_LAST_UPDATED = "https://vulndb.flashpoint.io/api/v1/vulnerabilities/find_by_time_full?hours_ago=";
+    private static final String TOKEN_URL = "https://vulndb.flashpoint.io/oauth/token";
 
-    private final UnirestInstance ui;
     private final String consumerKey;
     private final String consumerSecret;
+    private String accessToken;
 
     public enum Type {
         VENDORS,
@@ -69,13 +68,11 @@ public class VulnDbApi {
     public VulnDbApi(final String consumerKey, final String consumerSecret) {
         this.consumerKey = consumerKey;
         this.consumerSecret = consumerSecret;
-        this.ui = Unirest.primaryInstance();
     }
 
     public VulnDbApi(final String consumerKey, final String consumerSecret, final UnirestInstance ui) {
         this.consumerKey = consumerKey;
         this.consumerSecret = consumerSecret;
-        this.ui = ui;
     }
 
     /**
@@ -210,21 +207,55 @@ public class VulnDbApi {
         return results;
     }
 
-    /**
-     * Makes a one-legged OAuth 1.0a request for the specified URL.
-     *
-     * @param url the URL being requested
-     * @return an HttpResponse
-     * @since 1.0.0
-     */
+    // /**
+    //  * Makes a request to the specified URL using OAuth 2.0 Bearer Token
+    //  *
+    //  * @param url the URL being requested
+    //  * @return an HttpResponse
+    //  * @since 1.0.0
+    //  */
     private HttpResponse<JsonNode> makeRequest(final String url) {
         try {
-            final OAuthConsumer consumer = new DefaultOAuthConsumer(this.consumerKey, this.consumerSecret);
-            final String signed = consumer.sign(url);
-            return ui.get(signed).header("X-User-Agent", USER_AGENT).asJson();
-        } catch (OAuthException | UnirestException e) {
-            LOGGER.error("An error occurred making request: " + url, e);
+            if (accessToken == null || accessToken.isEmpty()) {
+                // Set request body parameters
+                String grantType = "client_credentials";
+                String clientId = this.consumerKey;
+                String clientSecret = this.consumerSecret;
+
+                // Get access token
+                HttpResponse<JsonNode> accessTokenResponse =
+                    Unirest.post(TOKEN_URL)
+                        .field("grant_type", grantType)
+                        .field("client_id", clientId)
+                        .field("client_secret", clientSecret)
+                        .asJson();
+
+                 if (accessTokenResponse.isSuccess()) {
+                    // Extract access token from response
+                    accessToken = accessTokenResponse.getBody().getObject().getString("access_token");
+                    System.out.println("New Token: "+accessToken);
+                 } else {
+                     LOGGER.error("Access token request failed with status: " + accessTokenResponse.getStatus());
+                     return null;
+                 }
+            }
+
+            // Make API call using stored access token
+            HttpResponse<JsonNode> apiCallResponse =
+                Unirest.get(url)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .header("X-User-Agent", USER_AGENT)  // Add User Agent VulnDB Data Mirror
+                    .asJson();
+
+             if (apiCallResponse.isSuccess()) {
+                 return apiCallResponse;
+             } else {
+                 LOGGER.error("API call failed with status: " + apiCallResponse.getStatus());
+             }
+        } catch (Exception e) {
+             LOGGER.error("An error occurred making request: " + url, e);
         }
+
         return null;
     }
 
