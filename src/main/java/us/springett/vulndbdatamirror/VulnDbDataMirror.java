@@ -15,6 +15,15 @@
  */
 package us.springett.vulndbdatamirror;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.Properties;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -24,17 +33,15 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import us.springett.vulndbdatamirror.client.VulnDbApi;
 import us.springett.vulndbdatamirror.parser.model.Results;
 import us.springett.vulndbdatamirror.parser.model.Status;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Date;
-import java.util.Properties;
 
 /**
  * This self-contained class can be called from the command-line. It downloads the
@@ -62,6 +69,7 @@ public class VulnDbDataMirror {
         options.addOption( "vend", "mirror-vendors", false, "Mirror the vendors data feed" );
         options.addOption( "prod", "mirror-products", false, "Mirror the products data feed" );
         options.addOption( "vuln", "mirror-vulnerabilities", false, "Mirror the vulnerabilities data feed" );
+        options.addOption("n","no-nvd-additional",false,"Download vulnerabilities without NVD additional information only");
 
         options.addOption(Option.builder().longOpt("consumer-key").desc("The Consumer Key provided by VulnDB")
                 .hasArg().required().argName("key").build()
@@ -95,14 +103,18 @@ public class VulnDbDataMirror {
                 mirror.mirrorProducts();
             }
             if (line.hasOption("mirror-vulnerabilities")) {
-                mirror.mirrorVulnerabilities();
+                if (line.hasOption("no-nvd-additional")) {
+                    mirror.mirrorVulnerabilitiesWithFilter();
+                } else {
+                    mirror.mirrorVulnerabilities();
+                }
             }
             if (line.hasOption("mirror-update")) {
                 System.out.println("Fetching last updating vulnerabilities");
                 final int hours = Integer.parseInt(line.getOptionValue("mirror-update"));
                 mirror.mirrorUpdatedVulnerabilities(hours);
             }
-            if (!(line.hasOption("mirror-vendors") && line.hasOption("mirror-products") && line.hasOption("mirror-vulnerabilities"))) {
+            if (!(line.hasOption("mirror-vendors") || line.hasOption("mirror-products") || line.hasOption("mirror-vulnerabilities"))) {
                 System.out.println("A feed to mirror was not specified. Defaulting to mirror all feeds.");
                 mirror.mirrorVendors();
                 mirror.mirrorProducts();
@@ -208,6 +220,56 @@ public class VulnDbDataMirror {
             System.exit(1);
         }
     }
+    private void mirrorVulnerabilitiesWithFilter() throws Exception {
+        final VulnDbApi api = new VulnDbApi(this.consumerKey, this.consumerSecret);
+        System.out.print("\nMirroring Vulnerabilities without NVD Additional Information feed...\n");
+        int page = lastSuccessfulPage("vulnerabilities_filtered");
+        boolean more = true;
+        while (more) {
+            final Results results = api.getVulnerabilities(100, page);
+            if (results.isSuccessful()) {
+                final String filteredResults = filterNVDAdditionalInfo(results.getRawResults());
+                if (!filteredResults.isEmpty()) {
+                    FileUtils.writeStringToFile(new File(this.outputDir, "vulnerabilities_filtered_" + results.getPage() + ".json"), filteredResults, "UTF-8");
+                    storeSuccessfulPage(VulnDbApi.Type.VULNERABILITIES_FILTERED, results.getPage());
+                } else {
+                    System.out.println("No vulnerabilities without NVD additional information found on page " + page);
+                }
+                more = results.getPage() * 100 < results.getTotal();
+                page++;
+            } else {
+                System.exit(1);
+            }
+        }
+        if (downloadFailed) {
+            System.exit(1);
+        }
+    }
+
+    private String filterNVDAdditionalInfo(String jsonResults) throws Exception {
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode rootNode = mapper.readTree(jsonResults);
+        ArrayNode resultsNode = (ArrayNode) rootNode.get("results");
+        ArrayNode filteredNode = mapper.createArrayNode();
+
+        System.out.print("\nFILTERING...\n");
+        for (JsonNode result : resultsNode) {
+            JsonNode nvdAdditionalInfo = result.get("nvd_additional_information");
+            System.out.print(nvdAdditionalInfo);
+            System.out.print("\n\n");
+            if (nvdAdditionalInfo != null && nvdAdditionalInfo.isArray() && nvdAdditionalInfo.size() == 0) {
+                filteredNode.add(result);
+            }
+        }
+
+        ObjectNode filteredResultsNode = mapper.createObjectNode();
+        filteredResultsNode.set("results", filteredNode);
+        filteredResultsNode.put("total_entries", rootNode.get("total_entries").asInt());
+        filteredResultsNode.put("current_page", rootNode.get("current_page").asInt());
+
+        return mapper.writeValueAsString(filteredResultsNode);
+    }
 
     private void mirrorUpdatedVulnerabilities(final int hours_ago) throws Exception {
         final VulnDbApi api = new VulnDbApi(this.consumerKey, this.consumerSecret);
@@ -229,11 +291,17 @@ public class VulnDbDataMirror {
     }
 
     private int lastSuccessfulPage(String prefix) {
+        if (prefix.equals("vulnerabilities_filtered")) {
+            prefix = "vulnerabilities_filtered"; // Adjust property key as needed
+        }
         return Integer.parseInt(properties.getProperty(prefix + ".last_success_page", "1"));
     }
 
     private void storeSuccessfulPage(VulnDbApi.Type type, int page) {
-        final String prefix = type.name().toLowerCase();
+        String prefix = type.name().toLowerCase();
+        if (type == VulnDbApi.Type.VULNERABILITIES_FILTERED) { // Assuming you'll add this to your VulnDbApi.Type enum
+            prefix = "vulnerabilities_filtered";
+        }
         properties.setProperty(prefix + ".last_success_page", String.valueOf(page));
         properties.setProperty(prefix + ".last_success_timestamp", String.valueOf(new Date().getTime()));
         writeProperties();

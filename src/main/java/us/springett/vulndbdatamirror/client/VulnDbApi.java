@@ -62,7 +62,8 @@ public class VulnDbApi {
     public enum Type {
         VENDORS,
         PRODUCTS,
-        VULNERABILITIES
+        VULNERABILITIES,
+        VULNERABILITIES_FILTERED
     }
 
     public VulnDbApi(final String consumerKey, final String consumerSecret) {

@@ -100,6 +100,9 @@ usage: vulndb-data-mirror
  -vend,--mirror-vendors           Mirror the vendors data feed
  -vuln,--mirror-vulnerabilities   Mirror the vulnerabilities data feed
  -stat,--status-only              Displays VulnDB API status only
+ -u,--mirror-update <hours>       Mirror just the updated vulnerabilities data feed from the past <hours>
+ -n, --no-nvd-additional          Filters vulnerabilities to download only those without additional information from the NVD.
+                                  **Note:** This option only works when used with `--mirror-vulnerabilities`.
 ```
 
 ### Mirror Recovery

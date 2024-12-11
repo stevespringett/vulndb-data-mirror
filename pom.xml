@@ -123,6 +123,12 @@
             <version>${lib.unirest.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version> <!-- Use the latest stable version -->
+        </dependency>
+
     </dependencies>
 
     <build>
